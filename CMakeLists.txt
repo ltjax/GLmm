@@ -7,16 +7,16 @@ include_directories(
 )
 
 add_library(GLmm
-	Object.cpp
-	Object.hpp
-	Shader.cpp
-	Shader.hpp
-	Program.cpp
-	Program.hpp
-	BufferObject.cpp
-	BufferObject.hpp
-	Texture.cpp
-	Texture.hpp
-	Framebuffer.cpp
-	Framebuffer.hpp
+	source/Object.cpp
+	include/GLmm/Object.hpp
+	source/Shader.cpp
+	include/GLmm/Shader.hpp
+	source/Program.cpp
+	include/GLmm/Program.hpp
+	source/BufferObject.cpp
+	include/GLmm/BufferObject.hpp
+	source/Texture.cpp
+	include/GLmm/Texture.hpp
+	source/Framebuffer.cpp
+	include/GLmm/Framebuffer.hpp
 )
