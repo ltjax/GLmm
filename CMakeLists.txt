@@ -4,6 +4,7 @@ include_directories(
   ${replay_SOURCE_DIR}/include
   ${Boost_INCLUDE_DIR}
   ${GLEW_INCLUDE_PATH}
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/GLmm
 )
 
 add_library(GLmm
