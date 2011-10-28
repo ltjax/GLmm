@@ -50,7 +50,7 @@ private:
 };
 
 template <class FileRangeType, class FragmentOutputType>
-Program CreateProgram(FileRangeType&& FileList, FragmentOutputType&& FragmentOutputList)
+Program CreateProgramFromFiles(FileRangeType&& FileList, FragmentOutputType&& FragmentOutputList)
 {
 	Program Result;
 
