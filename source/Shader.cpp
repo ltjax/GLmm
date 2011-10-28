@@ -2,6 +2,7 @@
 #include "Shader.hpp"
 #include <fstream>
 #include <boost/filesystem/fstream.hpp>
+#include <boost/algorithm/string/predicate.hpp>
 #include <vector>
 
 GLmm::Shader::Shader(GLuint Type, const std::string& Source)
@@ -106,13 +107,14 @@ GLmm::CreateShaderFromFile(GLenum Type, const boost::filesystem::path& Filename)
 GLmm::Shader
 GLmm::CreateShaderFromFile(const boost::filesystem::path& Filename)
 {
+	using boost::algorithm::iequals;
 	auto Extension = Filename.extension().string();
 	
-	if (Extension == ".frag")
+	if (iequals(Extension,".frag") || iequals(Extension,".fs"))
 		return CreateShaderFromFile(GL_FRAGMENT_SHADER, Filename);
-	else if (Extension == ".vert")
+	else if (iequals(Extension,".vert") || iequals(Extension,".vs"))
 		return CreateShaderFromFile(GL_VERTEX_SHADER, Filename);
-	else if (Extension == ".geom")
+	else if (iequals(Extension,".geom"))
 		return CreateShaderFromFile(GL_GEOMETRY_SHADER, Filename);
 
 	throw std::runtime_error("Unable to guess shader type from extension: " + Extension);
