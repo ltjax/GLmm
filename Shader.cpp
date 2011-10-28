@@ -99,14 +99,14 @@ GLmm::CreateShaderFromFile(GLenum Type, const boost::filesystem::path& Filename)
 	{
 
 		// Tag the filename onto the error message
-		throw std::runtime_error(Filename.filename() + " : " + Error.what());
+		throw std::runtime_error(Filename.string() + " : " + Error.what());
 	}
 }
 
 GLmm::Shader
 GLmm::CreateShaderFromFile(const boost::filesystem::path& Filename)
 {
-	auto Extension = Filename.extension();
+	auto Extension = Filename.extension().string();
 	
 	if (Extension == ".frag")
 		return CreateShaderFromFile(GL_FRAGMENT_SHADER, Filename);

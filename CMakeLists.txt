@@ -1,6 +1,8 @@
+project(GLmm)
 
 include_directories(
   ${replay_SOURCE_DIR}/include
+  ${Boost_INCLUDE_DIR}
   ${GLEW_INCLUDE_PATH}
 )
 
