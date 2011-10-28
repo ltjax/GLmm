@@ -57,15 +57,6 @@ void GLmm::Framebuffer::AttachColorbuffer( GLuint Index, const Texture2D& Textur
 		GL_TEXTURE_2D, Texture.GetGLObject(), Level ); GLMM_CHECK_ERRORS();
 }
 
-void GLmm::Framebuffer::AttachColorbuffer( GLuint Index, const TextureRect& Texture )
-{
-	Bind();
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + Index,
-		GL_TEXTURE_RECTANGLE, Texture.GetGLObject(), 0 );
-	
-	GLMM_CHECK_ERRORS();
-}
-
 void GLmm::Framebuffer::DetachColorbuffer( GLuint Index )
 {
 	Bind();

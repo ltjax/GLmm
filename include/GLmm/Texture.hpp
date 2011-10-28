@@ -157,49 +157,6 @@ private:
 	GLuint								GLObject;
 };
 
-/** texture rectangle object.
-*/
-class TextureRect :
-	public Texture
-{
-public:
-										TextureRect();
-										~TextureRect();
-	/** bind this texture object.
-	*/
-	void                                Bind() const;
-	void								Unbind() const;
-
-	/** set texture parameters.
-	*/
-	void								SetFilter( GLint MinFilter, GLint MagFilter );
-	void								SetWrap( GLint SWrap, GLint TWrap );
-	inline void							SetWrap( GLint Wrap ) { SetWrap( Wrap, Wrap ); }
-
-	/** Image upload.
-	*/
-	void								SetImage( GLint InternalFormat, GLsizei Width, GLsizei Height,
-												  GLenum Format, GLenum Type, const GLvoid* Data );
-
-	void								SetImage( GLint InternalFormat, GLsizei Width, GLsizei Height );
-
-	void								SetSubImage( GLint x, GLint y, GLsizei Width, GLsizei Height, 
-												GLenum Format, GLenum Type, const GLvoid* Data );
-
-	void								LoadFromFile( const Path& Filename );
-
-	/** Image download.
-	*/
-	replay::shared_pixbuf				GetImage() const;
-
-	/** get the object id as used by Opengl
-	*/
-	GLuint								GetGLObject() const { return GLObject; }
-
-private:
-	GLuint				                GLObject;
-};
-
 }
 
 #endif

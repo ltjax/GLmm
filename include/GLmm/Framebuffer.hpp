@@ -47,7 +47,6 @@ public:
 	void				TestCompleteness();
 
 	void				AttachColorbuffer( GLuint Index, const Texture2D& Texture, GLint Level = 0 );
-	void				AttachColorbuffer( GLuint Index, const TextureRect& Texture );
 	void				DetachColorbuffer( GLuint Index );
 
 	void				Attach( GLenum Attachment, const Texture2D& Texture, GLint Level = 0 );
