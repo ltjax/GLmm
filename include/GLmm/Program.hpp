@@ -2,6 +2,7 @@
 #ifndef GLMM_PROGRAM_HPP
 #define GLMM_PROGRAM_HPP
 
+#include <tuple>
 #include "Shader.hpp"
 
 namespace GLmm {
@@ -25,14 +26,25 @@ public:
 	};
 
 										Program();
+										Program(GLenum binaryFormat, const std::vector<char>& binary);
 										Program(Program&& rhs);
 										~Program();
 
 
 	void								Attach(const Shader& Rhs);
 
-	int									GetUniformLocation( const char* Name ) const;
-	int									GetAttribLocation( const char* Name ) const;
+	int									GetUniformLocation(const char* Name) const;
+	int									GetAttribLocation(const char* Name) const;
+
+	/** Retrieve this program in binary form, if possible.
+		\returns An enum describing the binary format, and the program in binary form.
+	*/
+	std::tuple<
+		GLenum,
+		std::vector<char>
+	>									GetBinary() const;
+
+	void								SetRetrieveableHint(bool Rhs);
 
 	void								Link();
 	
@@ -50,7 +62,8 @@ private:
 };
 
 template <class FileRangeType, class FragmentOutputType>
-Program CreateProgramFromFiles(FileRangeType&& FileList, FragmentOutputType&& FragmentOutputList)
+Program
+CreateProgramFromFiles(FileRangeType&& FileList, FragmentOutputType&& FragmentOutputList)
 {
 	Program Result;
 
@@ -66,6 +79,9 @@ Program CreateProgramFromFiles(FileRangeType&& FileList, FragmentOutputType&& Fr
 
 	return Result;
 }
+
+std::vector<GLenum>
+GetProgramBinaryFormats();
 
 }
 

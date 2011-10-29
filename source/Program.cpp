@@ -1,13 +1,37 @@
-/*  Cataclysm-Software Disaster Engine
+/*  GLmm
 
-	$Id: Program.cpp 920 2011-04-19 23:10:57Z ltjax $
-
-	Copyright 2006-2007 Marius Elvert
+	Copyright 2006-2011 Marius Elvert
 */
 
 
 #include <vector>
 #include "Program.hpp"
+
+namespace {
+
+void CheckLinkStatus(GLuint Program)
+{
+	GLint Status=0;
+	glGetProgramiv(Program, GL_LINK_STATUS, &Status);
+	GLMM_CHECK_ERRORS();
+
+	// check for eventual link errors.
+	if (!Status)
+	{
+		GLint InfoLength=0;
+		glGetProgramiv(Program, GL_INFO_LOG_LENGTH, &InfoLength);
+		GLMM_CHECK_ERRORS();
+
+		std::vector<GLchar> Buffer(InfoLength+1);
+
+		glGetProgramInfoLog(Program, GLsizei(InfoLength + 1), 0, Buffer.data());
+		GLMM_CHECK_ERRORS();
+
+		throw GLmm::Program::LinkError(Buffer.data());
+	}
+}
+
+}
 
 GLmm::Program::Program()
 : mGLObject(glCreateProgram())
@@ -21,6 +45,27 @@ GLmm::Program::Program(Program&& rhs)
 	Swap(rhs);
 }
 
+GLmm::Program::Program(GLenum binaryFormat, const std::vector<char>& binary)
+: mGLObject(0)
+{
+	if (!GLEW_ARB_get_program_binary)
+		throw std::runtime_error("GL_ARB_get_program_binary is not supported");
+
+	// Create a program and load the binary
+	mGLObject = glCreateProgram();
+	glProgramBinary(mGLObject, binaryFormat, binary.data(), binary.size());
+
+	// Check if this went well
+	try {
+		CheckLinkStatus(mGLObject);
+	}
+	catch (std::exception&)
+	{
+		glDeleteProgram(mGLObject);
+		throw;
+	}
+}
+
 GLmm::Program::~Program()
 {
 	if (mGLObject != 0)
@@ -32,24 +77,7 @@ void GLmm::Program::Link()
 	glLinkProgram(mGLObject);
 	GLMM_CHECK_ERRORS();
 
-	GLint Status=0;
-	glGetProgramiv(mGLObject, GL_LINK_STATUS, &Status);
-	GLMM_CHECK_ERRORS();
-
-	// check for eventual link errors.
-	if ( !Status )
-	{
-		GLint InfoLength=0;
-		glGetProgramiv(mGLObject, GL_INFO_LOG_LENGTH, &InfoLength);
-		GLMM_CHECK_ERRORS();
-
-		std::vector<GLchar> Buffer(InfoLength+1);
-
-		glGetProgramInfoLog(mGLObject, GLsizei(InfoLength + 1), 0, Buffer.data());
-		GLMM_CHECK_ERRORS();
-
-		throw LinkError(Buffer.data());
-	}
+	CheckLinkStatus(mGLObject);
 }
 
 int GLmm::Program::GetUniformLocation(const char* Name) const
@@ -78,4 +106,43 @@ void GLmm::Program::Attach(const Shader& Rhs)
 	GLMM_CHECK_ERRORS();
 }
 
+std::tuple<
+	GLenum,
+	std::vector<char>
+>
+GLmm::Program::GetBinary() const
+{
+	if (!GLEW_ARB_get_program_binary)
+		throw std::runtime_error("GL_ARB_get_program_binary is not supported");
 
+	GLint binaryLength=0;
+	glGetProgramiv(mGLObject, GL_PROGRAM_BINARY_LENGTH, &binaryLength);
+
+	std::vector<char> Buffer(binaryLength);
+	GLenum format = 0;
+
+	glGetProgramBinary(mGLObject, binaryLength, NULL, &format, Buffer.data());
+
+	return std::make_tuple(format, Buffer);
+}
+
+std::vector<GLenum>
+GLmm::GetProgramBinaryFormats()
+{
+	std::vector<GLenum> Result;
+
+	// Report no available formats if the extension is not supported
+	if (!GLEW_ARB_get_program_binary)
+		return Result;
+
+	// Otherwise, query the formats from the API
+	GLint ParameterCount=0;
+	glGetIntegerv(GL_NUM_PROGRAM_BINARY_FORMATS, &ParameterCount);
+	Result.resize(ParameterCount);
+	glGetIntegerv(GL_PROGRAM_BINARY_FORMATS, reinterpret_cast<GLint*>(Result.data()));
+
+	static_assert(sizeof(GLint)==sizeof(GLenum),
+		"Cannot get program binaries as GLenum");
+
+	return Result;
+}
