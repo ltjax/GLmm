@@ -42,7 +42,7 @@ public:
 	{
 		static_assert(std::has_trivial_copy_constructor<T>::value, "T needs to have a trivial copy-constructor");
 		SetData(Target, sizeof(T)*Data.size(),
-			reinterpret_cast<const GLubyte*>(&Data.front()), Usage); 
+			reinterpret_cast<const GLubyte*>(Data.data()), Usage); 
 	}
 
 	/** Transfer a part of the data to the buffer object.
