@@ -3,6 +3,7 @@
 #define GLMM_BUFFER_OBJECT_HPP
 
 #include <vector>
+#include <array>
 #include "Shader.hpp"
 
 namespace GLmm {
@@ -29,12 +30,11 @@ public:
 	*/
 	void					SetData(GLenum Target, std::size_t Size,
 									const GLubyte* Data, GLenum Usage);
-
+	
 	/** Transfer the data to the buffer object.
 		Implies a bind.
 		\param Target the buffer target type this is to be bound too
-		\param Size The number of elements of the the specified data type.
-		\param Data Pointer to an array of elements.
+		\param Data Vector to an array of elements.
 		\param Usage Which policy to use for storing.
 	*/
 	template <class T>
@@ -42,6 +42,20 @@ public:
 	{
 		static_assert(std::has_trivial_copy_constructor<T>::value, "T needs to have a trivial copy-constructor");
 		SetData(Target, sizeof(T)*Data.size(),
+			reinterpret_cast<const GLubyte*>(Data.data()), Usage); 
+	}
+
+	/** Transfer the data to the buffer object.
+		Implies a bind.
+		\param Target the buffer target type this is to be bound too
+		\param Data std::array to an array of elements.
+		\param Usage Which policy to use for storing.
+	*/
+	template <class T, std::size_t N>
+	void					SetData(GLenum Target, const std::array<T, N>& Data, GLenum Usage)
+	{
+		static_assert(std::has_trivial_copy_constructor<T>::value, "T needs to have a trivial copy-constructor");
+		SetData(Target, sizeof(T)*N,
 			reinterpret_cast<const GLubyte*>(Data.data()), Usage); 
 	}
 
