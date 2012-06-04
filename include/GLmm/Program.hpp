@@ -26,8 +26,8 @@ public:
 	};
 
 										Program();
-										Program(GLenum binaryFormat, const std::vector<char>& binary);
-										Program(Program&& rhs);
+										Program(GLenum BinaryFormat, const std::vector<char>& BinaryData);
+										Program(Program&& Rhs);
 										~Program();
 
 

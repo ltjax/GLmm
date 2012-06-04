@@ -1,11 +1,12 @@
 /*  GLmm
 
-	Copyright 2006-2011 Marius Elvert
+	Copyright 2006-2012 Marius Elvert
 */
 
 
 #include <vector>
 #include "Program.hpp"
+#include <boost/numeric/conversion/cast.hpp>
 
 namespace {
 
@@ -45,7 +46,7 @@ GLmm::Program::Program(Program&& rhs)
 	Swap(rhs);
 }
 
-GLmm::Program::Program(GLenum binaryFormat, const std::vector<char>& binary)
+GLmm::Program::Program(GLenum BinaryFormat, const std::vector<char>& BinaryData)
 : mGLObject(0)
 {
 	if (!GLEW_ARB_get_program_binary)
@@ -53,7 +54,7 @@ GLmm::Program::Program(GLenum binaryFormat, const std::vector<char>& binary)
 
 	// Create a program and load the binary
 	mGLObject = glCreateProgram();
-	glProgramBinary(mGLObject, binaryFormat, binary.data(), binary.size());
+	glProgramBinary(mGLObject, BinaryFormat, BinaryData.data(), boost::numeric_cast<GLsizei>(BinaryData.size()));
 
 	// Check if this went well
 	try {
