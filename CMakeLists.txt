@@ -8,6 +8,8 @@ include_directories(
 )
 
 add_library(GLmm
+	source/ArrayObject.cpp
+	include/GLmm/ArrayObject.hpp
 	source/Object.cpp
 	include/GLmm/Object.hpp
 	source/Shader.cpp
