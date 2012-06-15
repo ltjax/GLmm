@@ -42,9 +42,9 @@ public:
 		M							(T::*Member)
 	)
 	{
-		const T Object;
-		const M* Ptr=&(Object.*Member);
-		const std::size_t Offset=reinterpret_cast<const char*>(Ptr)-reinterpret_cast<const char*>(&Object);
+		const T* Object=nullptr;
+		const M* Ptr=&(Object->*Member);
+		const std::size_t Offset=reinterpret_cast<const char*>(Ptr)-reinterpret_cast<const char*>(Object);
 		
 		static_assert(std::has_trivial_copy_constructor<M>::value, "Vertex-attrib must trivially copyable");
 
