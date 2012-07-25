@@ -52,12 +52,12 @@ public:
 		return SetAttribPointer(Location, Buffer, Traits::Size, Traits::Type, Traits::Normalized, sizeof(T), Offset);
 	}
 
-	void	DrawArrays(GLenum Mode, GLint First, GLsizei Count);
-	void	DrawElements(GLenum Mode, GLsizei Count, GLenum Type, std::size_t Offset);
-	void	DrawRangeElements(GLenum Mode, GLuint Start, GLuint End, GLsizei Count, GLenum Type, std::size_t Offset);
+	void	DrawArrays(GLenum Mode, GLint First, GLsizei Count) const;
+	void	DrawElements(GLenum Mode, GLsizei Count, GLenum Type, std::size_t Offset) const;
+	void	DrawRangeElements(GLenum Mode, GLuint Start, GLuint End, GLsizei Count, GLenum Type, std::size_t Offset) const;
 private:
 
-	void	Bind();
+	void	Bind() const;
 	GLuint	mObject;
 };
 };

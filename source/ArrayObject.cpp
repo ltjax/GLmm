@@ -36,7 +36,7 @@ GLmm::ArrayObject::operator=(ArrayObject&& Rhs)
 }
 
 void
-GLmm::ArrayObject::Bind()
+GLmm::ArrayObject::Bind() const
 {
 	// Cannot bind moved objects
 	assert(mObject != 0);
@@ -83,21 +83,21 @@ GLmm::ArrayObject&	GLmm::ArrayObject::SetAttribPointer(
 	return *this;
 }
 
-void GLmm::ArrayObject::DrawArrays(GLenum Mode, GLint First, GLsizei Count)
+void GLmm::ArrayObject::DrawArrays(GLenum Mode, GLint First, GLsizei Count) const
 {
 	Bind();
 	glDrawArrays(Mode, First, Count);
 	GLMM_CHECK_ERRORS();
 }
 
-void GLmm::ArrayObject::DrawElements(GLenum Mode, GLsizei Count, GLenum Type, std::size_t Offset)
+void GLmm::ArrayObject::DrawElements(GLenum Mode, GLsizei Count, GLenum Type, std::size_t Offset) const
 {
 	Bind();
 	glDrawElements(Mode, Count, Type, reinterpret_cast<GLvoid*>(Offset));
 	GLMM_CHECK_ERRORS();
 }
 
-void GLmm::ArrayObject::DrawRangeElements(GLenum Mode, GLuint Start, GLuint End, GLsizei Count, GLenum Type, std::size_t Offset)
+void GLmm::ArrayObject::DrawRangeElements(GLenum Mode, GLuint Start, GLuint End, GLsizei Count, GLenum Type, std::size_t Offset) const
 {
 	Bind();
 	glDrawRangeElements(Mode, Start, End, Count, Type, reinterpret_cast<GLvoid*>(Offset));
