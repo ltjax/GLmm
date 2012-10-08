@@ -237,6 +237,26 @@ void Texture2D::SetImage( GLint Level, GLint InternalFormat, GLsizei Width, GLsi
 	this->SetImage( Level, InternalFormat, Width, Height, Format, GL_UNSIGNED_BYTE, 0 );
 }
 
+void Texture2D::SetImage(const replay::pixbuf& Source)
+{
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+	unsigned int Format;
+
+	switch(Source.get_channels())
+	{
+	case 1:		Format = GL_LUMINANCE; break;
+	case 3:		Format = GL_RGB; break;
+	case 4:		Format = GL_RGBA; break;
+	default:
+		GLMM_THROW_ERROR( "Unable to load texture - unsupported number of channels" );
+	}
+
+	SetImage(0, Source.get_channels(), Source.get_width(), Source.get_height(),
+		Format, GL_UNSIGNED_BYTE, Source.get_data());
+}
+
+
 void Texture2D::SetGenerateMipmap( bool Value )
 {
 	this->Bind();
@@ -253,23 +273,7 @@ void Texture2D::LoadFromFile( const Path& Filename )
 		GLMM_THROW_ERROR( "Unable to load texture: " 
 			<< Filename.string() << " (unable to load image file)" );
 
-	glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
-
-	unsigned int Format;
-
-	switch( Source->get_channels() )
-	{
-		case 1:		Format = GL_LUMINANCE; break;
-		case 3:		Format = GL_RGB; break;
-		case 4:		Format = GL_RGBA; break;
-		default:
-			GLMM_THROW_ERROR( "Unable to load texture: " <<
-				Filename.string() <<
-				" - unsupported number of channels" );
-	}
-
-	this->SetImage( 0, Source->get_channels(), Source->get_width(), Source->get_height(),
-					Format, GL_UNSIGNED_BYTE, Source->get_data() );
+	this->SetImage(*Source);
 }
 
 replay::shared_pixbuf Texture2D::GetImage( GLint Level ) const

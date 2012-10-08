@@ -135,21 +135,23 @@ public:
 
 	/** Image upload.
 	*/
-	void								SetImage( GLint Level, GLint InternalFormat, GLsizei Width, GLsizei Height,
-												  GLenum Format, GLenum Type, const GLvoid* Data );
+	void								SetImage(GLint Level, GLint InternalFormat, GLsizei Width, GLsizei Height,
+												 GLenum Format, GLenum Type, const GLvoid* Data);
 
-	void								SetImage( GLint Level, GLint InternalFormat, GLsizei Width, GLsizei Height );
+	void								SetImage(GLint Level, GLint InternalFormat, GLsizei Width, GLsizei Height);
 
-	void								SetSubImage( GLint Level, GLint x, GLint y, GLsizei Width, GLsizei Height, 
-												GLenum Format, GLenum Type, const GLvoid* Data );
+	void								SetImage(const replay::pixbuf& Source);
 
-	void								LoadFromFile( const Path& Filename );
+	void								SetSubImage(GLint Level, GLint x, GLint y, GLsizei Width, GLsizei Height, 
+												GLenum Format, GLenum Type, const GLvoid* Data);
+
+	void								LoadFromFile(const Path& Filename);
 
 	/** Image download.
 	*/
-	replay::shared_pixbuf				GetImage( GLint Level ) const;
+	replay::shared_pixbuf				GetImage(GLint Level) const;
 
-	/** get the object id as used by Opengl
+	/** get the object id as used by OpenGL
 	*/
 	GLuint								GetGLObject() const { return GLObject; }
 
