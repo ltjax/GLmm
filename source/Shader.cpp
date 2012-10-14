@@ -84,17 +84,8 @@ GLmm::CreateShaderFromFile(GLenum Type, const boost::filesystem::path& Filename)
 		throw std::runtime_error(ErrorString);
 	}
 
-	std::string Contents;
-
-	// Scan lines
-	std::string Line;
-	while (std::getline(File, Line))
-	{
-		Contents += Line + '\n';
-	}
-
 	try {
-		return Shader(Type, Contents);
+		return CreateShaderFromFile(Type, File);
 	}
 	catch (Shader::CompileError& Error)
 	{
@@ -107,15 +98,34 @@ GLmm::CreateShaderFromFile(GLenum Type, const boost::filesystem::path& Filename)
 GLmm::Shader
 GLmm::CreateShaderFromFile(const boost::filesystem::path& Filename)
 {
+	return CreateShaderFromFile(GetShaderTypeFromExtension(Filename), Filename);
+}
+
+GLmm::Shader GLmm::CreateShaderFromFile(GLenum Type, std::istream& File)
+{
+	std::string Contents;
+
+	// Scan lines
+	std::string Line;
+	while (std::getline(File, Line))
+	{
+		Contents += Line + '\n';
+	}
+
+	return Shader(Type, Contents);
+}
+
+GLenum GLmm::GetShaderTypeFromExtension(const boost::filesystem::path& Filename)
+{
 	using boost::algorithm::iequals;
 	auto Extension = Filename.extension().string();
-	
-	if (iequals(Extension,".frag") || iequals(Extension,".fs"))
-		return CreateShaderFromFile(GL_FRAGMENT_SHADER, Filename);
-	else if (iequals(Extension,".vert") || iequals(Extension,".vs"))
-		return CreateShaderFromFile(GL_VERTEX_SHADER, Filename);
-	else if (iequals(Extension,".geom"))
-		return CreateShaderFromFile(GL_GEOMETRY_SHADER, Filename);
 
-	throw std::runtime_error("Unable to guess shader type from extension: " + Extension);
+	if (iequals(Extension,".frag") || iequals(Extension,".fs"))
+		return GL_FRAGMENT_SHADER;
+	else if (iequals(Extension,".vert") || iequals(Extension,".vs"))
+		return GL_VERTEX_SHADER;
+	else if (iequals(Extension,".geom"))
+		return GL_GEOMETRY_SHADER;
+
+	throw std::runtime_error("Unable to deduce shader type from extension: " + Extension);
 }

@@ -49,6 +49,14 @@ private:
 	GLuint					mObject;
 };
 
+/** Get the OpenGL shader type from a filename extension
+*/
+GLenum						GetShaderTypeFromExtension(const boost::filesystem::path& Filename);
+
+/** Create a shader from a file stream.
+*/
+Shader						CreateShaderFromFile(GLenum Type, std::istream& File);
+
 /** Create a shader from a file.
 */
 Shader						CreateShaderFromFile(GLenum Type, const boost::filesystem::path& Filename);
