@@ -19,7 +19,7 @@ public:
 							BufferObject(BufferObject&& Rhs);
 							~BufferObject();
 
-	BufferObject&			operator=(BufferObject&& Rhs);
+	BufferObject&			operator=(BufferObject Rhs);
 	
 	/** Transfer the data to the buffer object.
 		Implies a bind.
@@ -67,14 +67,14 @@ public:
 
 	/** Map the buffer into local address space.
 	*/
-	GLubyte*				Map( GLenum Target, GLenum Access );
+	GLubyte*				Map(GLenum Target, GLenum Access);
 
-	bool					Unmap( GLenum Target );
-	void					Bind( GLenum Target ) const;
+	bool					Unmap(GLenum Target);
+	void					Bind(GLenum Target) const;
 
-	static void				Unbind( GLenum Target );
+	static void				Unbind(GLenum Target);
 
-	void					Swap( BufferObject& Rhs );
+	void					Swap(BufferObject& Rhs);
 
 	GLuint					GetGLObject() const {return mGLObject;}
 
@@ -86,6 +86,12 @@ private:
 };
 
 typedef stdext::checked_array_iterator<GLubyte*> BufferIterator;
+
+inline BufferObject& BufferObject::operator=(BufferObject Rhs)
+{
+	Swap(Rhs);
+	return *this;
+}
 
 template <class T>
 void SetSubData(BufferObject& Object, GLenum Target, std::size_t Size, std::size_t Offset, T Function)

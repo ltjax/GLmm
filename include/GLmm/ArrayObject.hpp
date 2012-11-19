@@ -19,7 +19,7 @@ public:
 	ArrayObject(ArrayObject&& Rhs);
 	~ArrayObject();
 
-	ArrayObject& operator=(ArrayObject&& Rhs); 
+	ArrayObject& operator=(ArrayObject Rhs); 
 
 	ArrayObject&	SetElementBuffer(
 		GLmm::BufferObject const&	ElementBuffer
@@ -55,11 +55,19 @@ public:
 	void	DrawArrays(GLenum Mode, GLint First, GLsizei Count) const;
 	void	DrawElements(GLenum Mode, GLsizei Count, GLenum Type, std::size_t Offset) const;
 	void	DrawRangeElements(GLenum Mode, GLuint Start, GLuint End, GLsizei Count, GLenum Type, std::size_t Offset) const;
+	void	Swap(ArrayObject& Rhs);
 private:
 
 	void	Bind() const;
 	GLuint	mObject;
 };
+
+inline ArrayObject& ArrayObject::operator=(ArrayObject Rhs)
+{
+	Swap(Rhs);
+	return *this;
+}
+
 };
 
 #endif

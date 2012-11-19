@@ -19,20 +19,11 @@ GLmm::ArrayObject::ArrayObject(ArrayObject&& Rhs)
 	Rhs.mObject=0;
 }
 
-GLmm::ArrayObject&
-GLmm::ArrayObject::operator=(ArrayObject&& Rhs)
+GLmm::ArrayObject::~ArrayObject()
 {
-	// FIXME: clumsy implementation
-	if (this == &Rhs)
-		return *this;
-
+	// Handle moved objects
 	if (mObject != 0)
 		glDeleteVertexArrays(1, &mObject);
-
-	mObject = Rhs.mObject;
-	Rhs.mObject = 0;
-
-	return *this;
 }
 
 void
@@ -45,12 +36,6 @@ GLmm::ArrayObject::Bind() const
 	GLMM_CHECK_ERRORS();
 }
 
-GLmm::ArrayObject::~ArrayObject()
-{
-	// Handle moved objects
-	if (mObject != 0)
-		glDeleteVertexArrays(1, &mObject);
-}
 
 GLmm::ArrayObject&	GLmm::ArrayObject::SetElementBuffer(
 	GLmm::BufferObject const&	ElementBuffer
@@ -102,4 +87,9 @@ void GLmm::ArrayObject::DrawRangeElements(GLenum Mode, GLuint Start, GLuint End,
 	Bind();
 	glDrawRangeElements(Mode, Start, End, Count, Type, reinterpret_cast<GLvoid*>(Offset));
 	GLMM_CHECK_ERRORS();
+}
+
+void GLmm::ArrayObject::Swap(ArrayObject& Rhs)
+{
+	std::swap(mObject, Rhs.mObject);
 }

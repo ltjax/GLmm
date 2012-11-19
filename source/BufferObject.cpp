@@ -20,17 +20,6 @@ GLmm::BufferObject::~BufferObject()
 		glDeleteBuffers(1, &mGLObject);
 }
 
-GLmm::BufferObject&
-GLmm::BufferObject::operator=(BufferObject&& Rhs)
-{
-	mGLObject = Rhs.mGLObject;
-	mInvalid = Rhs.mInvalid;
-
-	Rhs.mInvalid = true;
-
-	return *this;
-}
-
 void GLmm::BufferObject::SetData(
 		GLenum Target, std::size_t Size,
 		const GLubyte* Data, GLenum Usage )
