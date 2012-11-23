@@ -89,6 +89,13 @@ void GLmm::ArrayObject::DrawRangeElements(GLenum Mode, GLuint Start, GLuint End,
 	GLMM_CHECK_ERRORS();
 }
 
+void GLmm::ArrayObject::DrawRangeElementsBaseVertex(GLenum Mode, GLuint Start, GLuint End, GLsizei Count, GLenum Type, std::size_t Offset, GLint BaseVertex) const
+{
+	Bind();
+	glDrawRangeElementsBaseVertex(Mode, Start, End, Count, Type, reinterpret_cast<GLvoid*>(Offset), BaseVertex);
+	GLMM_CHECK_ERRORS();
+}
+
 void GLmm::ArrayObject::Swap(ArrayObject& Rhs)
 {
 	std::swap(mObject, Rhs.mObject);
