@@ -18,19 +18,6 @@ namespace GLmm {
 
 typedef boost::filesystem::path Path;
 
-/** bind point for textures.
-*/
-class TextureSlot
-{
-public:
-	TextureSlot() : Stage( 0 ) {}
-	void				SetStage( unsigned int i ) { Stage = i; }
-	unsigned int		GetStage() const { return Stage; }
-
-private:
-	unsigned int		Stage;
-};
-
 /** generic texture object.
 */
 class Texture :
@@ -38,7 +25,7 @@ class Texture :
 {
 public:
 	virtual void						Bind() const = 0;
-	void								BindTo( const TextureSlot& Slot ) const;
+	void								BindTo(GLenum TextureUnit) const;
 
 protected:
 	Texture();

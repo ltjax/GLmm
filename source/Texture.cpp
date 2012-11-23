@@ -4,9 +4,11 @@
 
 using namespace GLmm;
 
-void Texture::BindTo( const TextureSlot& Slot ) const
+void Texture::BindTo(GLenum const TextureUnit) const
 {
-	glActiveTexture( GL_TEXTURE0 + Slot.GetStage() );
+	glActiveTexture(TextureUnit);
+	GLMM_CHECK_ERRORS();
+
 	this->Bind();
 }
 
