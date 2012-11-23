@@ -56,6 +56,9 @@ public:
 
 	Program&							operator=(Program Rhs) {Swap(Rhs); return *this;}
 
+	void								UniformBlockBinding(GLuint BlockIndex, GLuint BlockBinding);
+	GLuint								GetUniformBlockIndex(const char* BlockName);
+
 private:
 	void								Swap(Program& Rhs) {std::swap(mGLObject, Rhs.mGLObject);}
 	GLuint								mGLObject;

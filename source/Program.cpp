@@ -147,3 +147,16 @@ GLmm::GetProgramBinaryFormats()
 
 	return Result;
 }
+
+void GLmm::Program::UniformBlockBinding(GLuint BlockIndex, GLuint BlockBinding)
+{
+	glUniformBlockBinding(mGLObject, BlockIndex, BlockBinding);
+	GLMM_CHECK_ERRORS();
+}
+
+GLuint GLmm::Program::GetUniformBlockIndex(const char* BlockName)
+{
+	GLuint const Result=glGetUniformBlockIndex(mGLObject, BlockName);
+	GLMM_CHECK_ERRORS();
+	return Result;
+}
