@@ -4,6 +4,7 @@
 
 #include <vector>
 #include <array>
+#include <type_traits>
 #include "Shader.hpp"
 
 namespace GLmm {
@@ -40,7 +41,9 @@ public:
 	template <class T>
 	void					SetData(GLenum Target, const std::vector<T>& Data, GLenum Usage)
 	{
+#if _MSC_VER >= 1600
 		static_assert(std::has_trivial_copy_constructor<T>::value, "T needs to have a trivial copy-constructor");
+#endif
 		SetData(Target, sizeof(T)*Data.size(),
 			reinterpret_cast<const GLubyte*>(Data.data()), Usage); 
 	}
@@ -54,7 +57,9 @@ public:
 	template <class T, std::size_t N>
 	void					SetData(GLenum Target, const std::array<T, N>& Data, GLenum Usage)
 	{
+#if _MSC_VER >= 1600
 		static_assert(std::has_trivial_copy_constructor<T>::value, "T needs to have a trivial copy-constructor");
+#endif
 		SetData(Target, sizeof(T)*N,
 			reinterpret_cast<const GLubyte*>(Data.data()), Usage); 
 	}
@@ -85,8 +90,21 @@ private:
 	bool					mInvalid;
 };
 
+    
+#if _MSC_VER >= 1600
 typedef stdext::checked_array_iterator<GLubyte*> BufferIterator;
-
+inline BufferIterator MakeBufferIterator(GLubyte* Data, std::size_t Size)
+{
+    return BufferIterator(Data, Size);
+}
+#else
+typedef GLubyte* BufferIterator;
+inline BufferIterator MakeBufferIterator(GLubyte* Data, std::size_t /*Size*/)
+{
+    return Data;
+}
+#endif
+    
 inline BufferObject& BufferObject::operator=(BufferObject Rhs)
 {
 	Swap(Rhs);
@@ -100,7 +118,7 @@ void SetSubData(BufferObject& Object, GLenum Target, std::size_t Size, std::size
 	if (GLubyte* MappedBuffer = Object.Map(Target, GL_WRITE_ONLY))
 	{
 		try {
-			Function(BufferIterator(MappedBuffer+Offset, Size));
+			Function(MakeBufferIterator(MappedBuffer+Offset, Size));
 		}
 		catch (...)
 		{
@@ -120,7 +138,7 @@ void SetSubData(BufferObject& Object, GLenum Target, std::size_t Size, std::size
 	std::vector<GLubyte> Buffer(Size);
 	
 	// Fill the buffer
-	Function(BufferIterator(Buffer.data(), Size));
+	Function(MakeBufferIterator(Buffer.data(), Size));
 
 	// Write it out
 	Object.SetSubData(Target, Size, Offset, Buffer.data());

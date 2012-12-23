@@ -45,9 +45,10 @@ public:
 		const T* Object=nullptr;
 		const M* Ptr=&(Object->*Member);
 		const std::size_t Offset=reinterpret_cast<const char*>(Ptr)-reinterpret_cast<const char*>(Object);
-		
+#if _MSC_VER >= 1600
 		static_assert(std::has_trivial_copy_constructor<M>::value, "Vertex-attrib must trivially copyable");
-
+#endif
+        
 		typedef AttribTraits<M> Traits;
 		return SetAttribPointer(Location, Buffer, Traits::Size, Traits::Type, Traits::Normalized, sizeof(T), Offset);
 	}
