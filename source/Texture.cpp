@@ -203,6 +203,10 @@ void Texture2D::SetImage( GLint Level, GLint InternalFormat, GLsizei Width, GLsi
 						  GLenum Format, GLenum Type, const GLvoid* Data )
 {
 	this->Bind();
+    
+    
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    GLMM_CHECK_ERRORS();
 
 	glTexImage2D(GL_TEXTURE_2D, Level, InternalFormat,
 			Width, Height, 0, Format, Type, Data);
@@ -254,7 +258,7 @@ void Texture2D::SetImage(const replay::pixbuf& Source)
 		GLMM_THROW_ERROR( "Unable to load texture - unsupported number of channels" );
 	}
 
-	SetImage(0, Source.get_channels(), Source.get_width(), Source.get_height(),
+	SetImage(0, Format, Source.get_width(), Source.get_height(),
 		Format, GL_UNSIGNED_BYTE, Source.get_data());
 }
 
