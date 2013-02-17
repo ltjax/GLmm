@@ -58,9 +58,12 @@ public:
 	void	DrawRangeElements(GLenum Mode, GLuint Start, GLuint End, GLsizei Count, GLenum Type, std::size_t Offset) const;
 	void	DrawRangeElementsBaseVertex(GLenum Mode, GLuint Start, GLuint End, GLsizei Count, GLenum Type, std::size_t Offset, GLint BaseVertex) const;
 	void	Swap(ArrayObject& Rhs);
+
 private:
 
 	void	Bind() const;
+	void	Unbind() const;
+
 	GLuint	mObject;
 };
 

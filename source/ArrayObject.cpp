@@ -36,6 +36,12 @@ GLmm::ArrayObject::Bind() const
 	GLMM_CHECK_ERRORS();
 }
 
+void
+GLmm::ArrayObject::Unbind() const
+{
+	glBindVertexArray(0);
+	GLMM_CHECK_ERRORS();
+}
 
 GLmm::ArrayObject&	GLmm::ArrayObject::SetElementBuffer(
 	GLmm::BufferObject const&	ElementBuffer
@@ -43,6 +49,8 @@ GLmm::ArrayObject&	GLmm::ArrayObject::SetElementBuffer(
 {
 	Bind();
 	ElementBuffer.Bind(GL_ELEMENT_ARRAY_BUFFER);
+
+	Unbind();
 	return *this;
 }
 
@@ -64,7 +72,8 @@ GLmm::ArrayObject&	GLmm::ArrayObject::SetAttribPointer(
 	glEnableVertexAttribArray(Location);
 	Buffer.Bind(GL_ARRAY_BUFFER);
 	glVertexAttribPointer(Location, Size, Type, Normalized ? GL_TRUE : GL_FALSE, boost::numeric_cast<GLsizei>(Stride), reinterpret_cast<GLvoid*>(Offset));
-
+	
+	Unbind();
 	return *this;
 }
 
@@ -73,6 +82,7 @@ void GLmm::ArrayObject::DrawArrays(GLenum Mode, GLint First, GLsizei Count) cons
 	Bind();
 	glDrawArrays(Mode, First, Count);
 	GLMM_CHECK_ERRORS();
+	Unbind();
 }
 
 void GLmm::ArrayObject::DrawElements(GLenum Mode, GLsizei Count, GLenum Type, std::size_t Offset) const
@@ -80,6 +90,7 @@ void GLmm::ArrayObject::DrawElements(GLenum Mode, GLsizei Count, GLenum Type, st
 	Bind();
 	glDrawElements(Mode, Count, Type, reinterpret_cast<GLvoid*>(Offset));
 	GLMM_CHECK_ERRORS();
+	Unbind();
 }
 
 void GLmm::ArrayObject::DrawRangeElements(GLenum Mode, GLuint Start, GLuint End, GLsizei Count, GLenum Type, std::size_t Offset) const
@@ -87,6 +98,7 @@ void GLmm::ArrayObject::DrawRangeElements(GLenum Mode, GLuint Start, GLuint End,
 	Bind();
 	glDrawRangeElements(Mode, Start, End, Count, Type, reinterpret_cast<GLvoid*>(Offset));
 	GLMM_CHECK_ERRORS();
+	Unbind();
 }
 
 void GLmm::ArrayObject::DrawRangeElementsBaseVertex(GLenum Mode, GLuint Start, GLuint End, GLsizei Count, GLenum Type, std::size_t Offset, GLint BaseVertex) const
@@ -94,6 +106,7 @@ void GLmm::ArrayObject::DrawRangeElementsBaseVertex(GLenum Mode, GLuint Start, G
 	Bind();
 	glDrawRangeElementsBaseVertex(Mode, Start, End, Count, Type, reinterpret_cast<GLvoid*>(Offset), BaseVertex);
 	GLMM_CHECK_ERRORS();
+	Unbind();
 }
 
 void GLmm::ArrayObject::Swap(ArrayObject& Rhs)
