@@ -34,7 +34,7 @@ void GLmm::CheckErrorsAt(const char* File, unsigned int Line)
 {
 	unsigned int ErrorCode = glGetError();
 
-	assert(ErrorCode == GL_NO_ERROR);
+	//assert(ErrorCode == GL_NO_ERROR);
 
 	if (ErrorCode != GL_NO_ERROR)
 	{

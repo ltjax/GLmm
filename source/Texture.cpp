@@ -127,6 +127,7 @@ void Texture2DArray::Unbind() const
 
 Texture2D::Texture2D()
 {
+	GLMM_CHECK_ERRORS();
 	// Allocate a texture from the GL
 	glGenTextures(1, &GLObject);
 	GLMM_CHECK_ERRORS();
