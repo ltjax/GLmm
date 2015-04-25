@@ -117,7 +117,6 @@ public:
 	inline void							SetWrap( GLint Wrap ) { SetWrap( Wrap, Wrap ); }
 	void								SetCompareMode( GLint Mode );
 	void								SetCompareFunc( GLint Function );
-	void								SetGenerateMipmap( bool Value );
 	void								GenerateMipmap();
 
 	/** Image upload.

@@ -14,7 +14,7 @@ Marius Elvert (marius.elvert@cataclysm-software.com) 2006-2011
 
 #include <sstream>
 #include <stdexcept>
-#include <GL/glew.h>
+#include <flextGL.h>
 
 namespace GLmm {
 

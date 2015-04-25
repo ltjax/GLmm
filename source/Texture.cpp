@@ -86,43 +86,54 @@ void Texture2DArray::SetFilter( GLint MinFilter, GLint MagFilter )
 {
 	this->Bind();
 
-	glTexParameteri( GL_TEXTURE_2D_ARRAY_EXT, GL_TEXTURE_MIN_FILTER, MinFilter ); GLMM_CHECK_ERRORS();
-	glTexParameteri( GL_TEXTURE_2D_ARRAY_EXT, GL_TEXTURE_MAG_FILTER, MagFilter ); GLMM_CHECK_ERRORS();
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, MinFilter);
+	GLMM_CHECK_ERRORS();
+
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, MagFilter);
+	GLMM_CHECK_ERRORS();
 }
 
 void Texture2DArray::SetWrap( GLint SWrap, GLint TWrap )
 {
 	this->Bind();
 
-	glTexParameteri( GL_TEXTURE_2D_ARRAY_EXT, GL_TEXTURE_WRAP_S, SWrap ); GLMM_CHECK_ERRORS();
-	glTexParameteri( GL_TEXTURE_2D_ARRAY_EXT, GL_TEXTURE_WRAP_T, TWrap ); GLMM_CHECK_ERRORS();
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, SWrap );
+	GLMM_CHECK_ERRORS();
+
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, TWrap );
+	GLMM_CHECK_ERRORS();
 }
 
 Texture2DArray::Texture2DArray()
 {
-	glGenTextures( 1, &GLObject ); GLMM_CHECK_ERRORS();
+	glGenTextures(1, &GLObject);
+	GLMM_CHECK_ERRORS();
 }
 
 Texture2DArray::~Texture2DArray()
 {
-	glDeleteTextures( 1, &GLObject ); GLMM_CHECK_ERRORS();
+	glDeleteTextures(1, &GLObject);
+	GLMM_CHECK_ERRORS();
 }
 
 void Texture2DArray::SetImage( GLint Level, GLint InternalFormat,
 							   GLsizei Width, GLsizei Height, GLsizei Depth,
 							   GLenum Format, GLenum Type, GLvoid* Data )
 {
-	glTexImage3D( GL_TEXTURE_2D_ARRAY_EXT, Level, InternalFormat, Width, Height, Depth, 0, Format, Type, Data ); GLMM_CHECK_ERRORS();
+	glTexImage3D(GL_TEXTURE_2D_ARRAY, Level, InternalFormat, Width, Height, Depth, 0, Format, Type, Data );
+	GLMM_CHECK_ERRORS();
 }
 
 void Texture2DArray::Bind() const
 {
-	glBindTexture( GL_TEXTURE_2D_ARRAY_EXT, GLObject ); GLMM_CHECK_ERRORS();
+	glBindTexture(GL_TEXTURE_2D_ARRAY, GLObject );
+	GLMM_CHECK_ERRORS();
 }
 
 void Texture2DArray::Unbind() const
 {
-	glBindTexture( GL_TEXTURE_2D_ARRAY_EXT, 0 ); GLMM_CHECK_ERRORS();
+	glBindTexture(GL_TEXTURE_2D_ARRAY, 0 );
+	GLMM_CHECK_ERRORS();
 }
 
 Texture2D::Texture2D()
@@ -226,7 +237,7 @@ void Texture2D::SetSubImage( GLint Level, GLint x, GLint y, GLsizei Width, GLsiz
 
 }
 
-void Texture2D::SetImage( GLint Level, GLint InternalFormat, GLsizei Width, GLsizei Height )
+void Texture2D::SetImage(GLint Level, GLint InternalFormat, GLsizei Width, GLsizei Height)
 {
 	GLenum Format = GL_RGBA;
 	
@@ -234,14 +245,13 @@ void Texture2D::SetImage( GLint Level, GLint InternalFormat, GLsizei Width, GLsi
 	{
 	case GL_DEPTH_COMPONENT24:
 	case GL_DEPTH_COMPONENT:
-	case GL_DEPTH_COMPONENT32F_NV:
 		Format = GL_DEPTH_COMPONENT;
 		break;
 	default:
 		break;
 	};
 
-	this->SetImage( Level, InternalFormat, Width, Height, Format, GL_UNSIGNED_BYTE, 0 );
+	this->SetImage(Level, InternalFormat, Width, Height, Format, GL_UNSIGNED_BYTE, 0);
 }
 
 void Texture2D::SetImage(const replay::pixbuf& Source)
@@ -250,25 +260,18 @@ void Texture2D::SetImage(const replay::pixbuf& Source)
 
 	unsigned int Format;
 
-	switch(Source.get_channels())
+	switch (Source.get_channels())
 	{
-	case 1:		Format = GL_LUMINANCE; break;
-	case 3:		Format = GL_RGB; break;
-	case 4:		Format = GL_RGBA; break;
+	case 1: Format=GL_RED; break;
+	case 2: Format=GL_RG; break;
+	case 3: Format=GL_RGB; break;
+	case 4: Format=GL_RGBA; break;
 	default:
-		GLMM_THROW_ERROR( "Unable to load texture - unsupported number of channels" );
+		GLMM_THROW_ERROR("Unable to load texture - unsupported number of channels");
 	}
 
 	SetImage(0, Format, Source.get_width(), Source.get_height(),
 		Format, GL_UNSIGNED_BYTE, Source.get_data());
-}
-
-
-void Texture2D::SetGenerateMipmap( bool Value )
-{
-	this->Bind();
-
-	glTexParameteri( GL_TEXTURE_2D, GL_GENERATE_MIPMAP, Value ? GL_TRUE : GL_FALSE );
 }
 
 void Texture2D::LoadFromFile( const Path& Filename )

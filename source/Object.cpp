@@ -13,15 +13,13 @@ namespace {
 /** Translate the error code into a human readable string.
 */
 inline
-const char* GetErrorString(unsigned int Code)
+const char* GetErrorString(GLenum Code)
 {
-	switch ( Code )
+	switch (Code)
 	{
 		case GL_INVALID_ENUM: return "GL_INVALID_ENUM";
 		case GL_INVALID_VALUE: return "GL_INVALID_VALUE";
 		case GL_INVALID_OPERATION: return "GL_INVALID_OPERATION";
-		case GL_STACK_OVERFLOW: return "GL_STACK_OVERFLOW";
-		case GL_STACK_UNDERFLOW: return "GL_STACK_UNDERFLOW";
 		case GL_OUT_OF_MEMORY: return "GL_OUT_OF_MEMORY";
 		case GL_INVALID_FRAMEBUFFER_OPERATION: return "GL_INVALID_FRAMEBUFFER_OPERATION";
 		default: return "UNKNOWN GL ERRORCODE";
@@ -32,9 +30,7 @@ const char* GetErrorString(unsigned int Code)
 
 void GLmm::CheckErrorsAt(const char* File, unsigned int Line)
 {
-	unsigned int ErrorCode = glGetError();
-
-	//assert(ErrorCode == GL_NO_ERROR);
+	GLenum ErrorCode = glGetError();
 
 	if (ErrorCode != GL_NO_ERROR)
 	{

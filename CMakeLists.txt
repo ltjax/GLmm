@@ -3,11 +3,13 @@ project(GLmm)
 include_directories(
   ${replay_SOURCE_DIR}/include
   ${Boost_INCLUDE_DIR}
-  ${GLEW_INCLUDE_PATH}
   ${CMAKE_CURRENT_SOURCE_DIR}/include/GLmm
+  ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
 add_library(GLmm
+	include/flextGL.h
+	source/flextGL.c
 	source/ArrayObject.cpp
 	include/GLmm/ArrayObject.hpp
 	source/Object.cpp
