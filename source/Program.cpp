@@ -49,7 +49,7 @@ GLmm::Program::Program(Program&& rhs)
 GLmm::Program::Program(GLenum BinaryFormat, const std::vector<char>& BinaryData)
 : mGLObject(0)
 {
-	if (!FLEXT_ARB_get_program_binary)
+    if (!ogl_ext_ARB_get_program_binary)
 		throw std::runtime_error("GL_ARB_get_program_binary is not supported");
 
 	// Create a program and load the binary
@@ -113,7 +113,7 @@ std::tuple<
 >
 GLmm::Program::GetBinary() const
 {
-	if (!FLEXT_ARB_get_program_binary)
+    if (!ogl_ext_ARB_get_program_binary)
 		throw std::runtime_error("GL_ARB_get_program_binary is not supported");
 
 	GLint binaryLength=0;
@@ -133,7 +133,7 @@ GLmm::GetProgramBinaryFormats()
 	std::vector<GLenum> Result;
 
 	// Report no available formats if the extension is not supported
-	if (!FLEXT_ARB_get_program_binary)
+    if (!ogl_ext_ARB_get_program_binary)
 		return Result;
 
 	// Otherwise, query the formats from the API

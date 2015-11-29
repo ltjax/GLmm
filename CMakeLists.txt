@@ -8,8 +8,8 @@ include_directories(
 )
 
 add_library(GLmm
-	include/flextGL.h
-	source/flextGL.c
+	include/gl_core_3_2.h
+	source/gl_core_3_2.c
 	source/ArrayObject.cpp
 	include/GLmm/ArrayObject.hpp
 	source/Object.cpp
