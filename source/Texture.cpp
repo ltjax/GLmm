@@ -4,6 +4,39 @@
 
 using namespace GLmm;
 
+namespace {
+
+GLuint FormatForChannelCount(int ChannelCount)
+{
+    switch (ChannelCount)
+    {
+    case 1: return GL_RED;
+    case 2: return GL_RG;
+    case 3: return GL_RGB;
+    case 4: return GL_RGBA;
+    default:
+        GLMM_THROW_ERROR("Unsupported number of channels");
+    }
+}
+
+GLuint InternalFormatForFormat(GLuint Format, GLmm::Colorspace Space)
+{
+    if (Space==GLmm::Colorspace::Linear)
+        return Format;
+
+    switch(Format)
+    {
+    case GL_RGB:
+        return GL_SRGB8;
+    case GL_RGBA:
+        return GL_SRGB8_ALPHA8;
+    default:
+        GLMM_THROW_ERROR("Unsupported format for sRGB");
+    }
+}
+
+}
+
 void Texture::BindTo(GLenum const TextureUnit) const
 {
 	glActiveTexture(TextureUnit);
@@ -254,27 +287,17 @@ void Texture2D::SetImage(GLint Level, GLint InternalFormat, GLsizei Width, GLsiz
 	this->SetImage(Level, InternalFormat, Width, Height, Format, GL_UNSIGNED_BYTE, 0);
 }
 
-void Texture2D::SetImage(const replay::pixbuf& Source)
+void Texture2D::SetImage(const replay::pixbuf& Source, Colorspace Space)
 {
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-	unsigned int Format;
+	auto Format = FormatForChannelCount(Source.get_channels());
 
-	switch (Source.get_channels())
-	{
-	case 1: Format=GL_RED; break;
-	case 2: Format=GL_RG; break;
-	case 3: Format=GL_RGB; break;
-	case 4: Format=GL_RGBA; break;
-	default:
-		GLMM_THROW_ERROR("Unable to load texture - unsupported number of channels");
-	}
-
-	SetImage(0, Format, Source.get_width(), Source.get_height(),
+    SetImage(0, InternalFormatForFormat(Format, Space), Source.get_width(), Source.get_height(),
 		Format, GL_UNSIGNED_BYTE, Source.get_data());
 }
 
-void Texture2D::LoadFromFile( const Path& Filename )
+void Texture2D::LoadFromFile(const Path& Filename, Colorspace Space)
 {
 	// load the texture
 	replay::shared_pixbuf	Source = replay::pixbuf_io::load_from_file( Filename );
@@ -283,7 +306,7 @@ void Texture2D::LoadFromFile( const Path& Filename )
 		GLMM_THROW_ERROR( "Unable to load texture: " 
 			<< Filename.string() << " (unable to load image file)" );
 
-	this->SetImage(*Source);
+	this->SetImage(*Source, Space);
 }
 
 replay::shared_pixbuf Texture2D::GetImage( GLint Level ) const

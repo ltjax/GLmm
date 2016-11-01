@@ -16,6 +16,11 @@
 
 namespace GLmm {
 
+enum class Colorspace {
+    Linear,
+    sRGB
+};
+
 typedef boost::filesystem::path Path;
 
 /** generic texture object.
@@ -126,12 +131,12 @@ public:
 
 	void								SetImage(GLint Level, GLint InternalFormat, GLsizei Width, GLsizei Height);
 
-	void								SetImage(const replay::pixbuf& Source);
+    void								SetImage(const replay::pixbuf& Source, Colorspace Space);
 
 	void								SetSubImage(GLint Level, GLint x, GLint y, GLsizei Width, GLsizei Height, 
 												GLenum Format, GLenum Type, const GLvoid* Data);
 
-	void								LoadFromFile(const Path& Filename);
+    void								LoadFromFile(const Path& Filename, Colorspace Space);
 
 	/** Image download.
 	*/
