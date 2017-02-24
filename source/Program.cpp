@@ -154,6 +154,11 @@ void GLmm::Program::UniformBlockBinding(GLuint BlockIndex, GLuint BlockBinding)
 	GLMM_CHECK_ERRORS();
 }
 
+void GLmm::Program::UniformBlockBinding(const char* BlockName, GLuint BlockBinding)
+{
+	UniformBlockBinding(GetUniformBlockIndex(BlockName), BlockBinding);
+}
+
 GLuint GLmm::Program::GetUniformBlockIndex(const char* BlockName)
 {
 	GLuint const Result=glGetUniformBlockIndex(mGLObject, BlockName);

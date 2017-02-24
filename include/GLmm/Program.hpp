@@ -58,6 +58,7 @@ public:
 
 	void								UniformBlockBinding(GLuint BlockIndex, GLuint BlockBinding);
 	GLuint								GetUniformBlockIndex(const char* BlockName);
+	void								UniformBlockBinding(const char* BlockName, GLuint BlockBinding);
 
 private:
 	void								Swap(Program& Rhs) {std::swap(mGLObject, Rhs.mGLObject);}
