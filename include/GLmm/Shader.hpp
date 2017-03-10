@@ -30,6 +30,7 @@ public:
 	};
 
 	explicit				Shader(GLenum Type, const std::string& Source);
+    explicit                Shader(GLenum Type, const std::vector<std::string>& Sources);
 							Shader(Shader&& Other);
 							~Shader();
 
@@ -39,7 +40,8 @@ public:
 	GLuint					GetGLObject() const {return mObject;}
 
 private:
-	void					SetSource(const std::string& Source);
+    void					SetSource(const std::string& Source);
+    void					SetSources(const std::vector<std::string>& Sources);
 	
 	/** Compile the shader.
 		Throws CompileError on a compile-time error.

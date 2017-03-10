@@ -19,6 +19,20 @@ GLmm::Shader::Shader(GLuint Type, const std::string& Source)
 	Compile();
 }
 
+GLmm::Shader::Shader(GLenum Type, const std::vector<std::string>& Sources)
+{
+    mObject=glCreateShader(Type);
+
+    if (!mObject)
+    {
+        GLMM_THROW_ERROR("Unable to create shader object (type:"<<Type<<")");
+    }
+
+    // Finalize this object
+    SetSources(Sources);
+    Compile();
+}
+
 GLmm::Shader::Shader(Shader&& Other)
 {
 	mObject = Other.mObject;
@@ -45,10 +59,25 @@ GLmm::Shader::~Shader()
 
 void GLmm::Shader::SetSource(const std::string& Source)
 {
-	const GLint	Length = (const int)Source.length();
-	const GLchar* String[1] = {Source.data()};
+    const GLint	Length=(const int)Source.length();
+    const GLchar* String[1]={Source.data()};
 
-	glShaderSource(mObject, 1, String, &Length);
+    glShaderSource(mObject, 1, String, &Length);
+}
+
+void GLmm::Shader::SetSources(const std::vector<std::string>& Sources)
+{
+    std::vector<GLint> Lengths;
+    std::vector<GLchar const*> Strings;
+
+    for (auto const& Each : Sources)
+    {
+        Lengths.push_back(Each.length());
+        Strings.push_back(Each.data());
+    }
+
+    glShaderSource(mObject, static_cast<GLsizei>(Sources.size()),
+                   Strings.data(), Lengths.data());
 }
 
 void GLmm::Shader::Compile()
