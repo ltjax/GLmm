@@ -2,72 +2,70 @@
 #ifndef GLMM_SHADER_HPP
 #define GLMM_SHADER_HPP
 
-#include <iostream>
-#include <stdexcept>
-#include <boost/utility.hpp>
+#include "Object.hpp"
 #include <boost/filesystem/path.hpp>
 #include <boost/optional/optional.hpp>
-#include "Object.hpp"
+#include <boost/utility.hpp>
+#include <iostream>
+#include <stdexcept>
 
-namespace GLmm {
+namespace GLmm
+{
 
 /** A GL programmable pipeline compilation unit.
 */
-class Shader :
-	public boost::noncopyable
+class Shader : public boost::noncopyable
 {
 public:
+    /** Error that is thrown when Shader::Compile() fails.
+    */
+    struct CompileError : public std::runtime_error
+    {
+        CompileError(const std::string& Message)
+        : std::runtime_error(Message)
+        {
+        }
+    };
 
-	/** Error that is thrown when Shader::Compile() fails.
-	*/
-	struct CompileError :
-		public std::runtime_error
-	{
-		CompileError(const std::string& Message) :
-			std::runtime_error(Message)
-		{
-		}
-	};
+    explicit Shader(GLenum Type, const std::string& Source);
+    explicit Shader(GLenum Type, const std::vector<std::string>& Sources);
+    Shader(Shader&& Other);
+    ~Shader();
 
-	explicit				Shader(GLenum Type, const std::string& Source);
-    explicit                Shader(GLenum Type, const std::vector<std::string>& Sources);
-							Shader(Shader&& Other);
-							~Shader();
+    Shader& operator=(Shader&& Other);
 
-	Shader&					operator=(Shader&& Other);
-
-
-	GLuint					GetGLObject() const {return mObject;}
+    GLuint GetGLObject() const
+    {
+        return mObject;
+    }
 
 private:
-    void					SetSource(const std::string& Source);
-    void					SetSources(const std::vector<std::string>& Sources);
-	
-	/** Compile the shader.
-		Throws CompileError on a compile-time error.
-	*/
-	void					Compile();
+    void SetSource(const std::string& Source);
+    void SetSources(const std::vector<std::string>& Sources);
 
-	GLuint					mObject;
+    /** Compile the shader.
+        Throws CompileError on a compile-time error.
+    */
+    void Compile();
+
+    GLuint mObject;
 };
 
 /** Get the OpenGL shader type from a filename extension
 */
-GLenum						GetShaderTypeFromExtension(const boost::filesystem::path& Filename);
+GLenum GetShaderTypeFromExtension(const boost::filesystem::path& Filename);
 
 /** Create a shader from a file stream.
 */
-Shader						CreateShaderFromFile(GLenum Type, std::istream& File);
+Shader CreateShaderFromFile(GLenum Type, std::istream& File);
 
 /** Create a shader from a file.
 */
-Shader						CreateShaderFromFile(GLenum Type, const boost::filesystem::path& Filename);
+Shader CreateShaderFromFile(GLenum Type, const boost::filesystem::path& Filename);
 
 /** Create a shader from a file and try to guess the shader type.
 */
-Shader						CreateShaderFromFile(const boost::filesystem::path& Filename);
-
+Shader CreateShaderFromFile(const boost::filesystem::path& Filename);
 }
 
 #endif
-

@@ -1,31 +1,31 @@
 
 #include "Shader.hpp"
-#include <fstream>
-#include <boost/filesystem/fstream.hpp>
 #include <boost/algorithm/string/predicate.hpp>
+#include <boost/filesystem/fstream.hpp>
+#include <fstream>
 #include <vector>
 
 GLmm::Shader::Shader(GLuint Type, const std::string& Source)
 {
-	mObject = glCreateShader( Type );
+    mObject = glCreateShader(Type);
 
-	if (!mObject)
-	{
-		GLMM_THROW_ERROR("Unable to create shader object (type:" << Type << ")");
-	}
+    if (!mObject)
+    {
+        GLMM_THROW_ERROR("Unable to create shader object (type:" << Type << ")");
+    }
 
-	// Finalize this object
-	SetSource(Source);
-	Compile();
+    // Finalize this object
+    SetSource(Source);
+    Compile();
 }
 
 GLmm::Shader::Shader(GLenum Type, const std::vector<std::string>& Sources)
 {
-    mObject=glCreateShader(Type);
+    mObject = glCreateShader(Type);
 
     if (!mObject)
     {
-        GLMM_THROW_ERROR("Unable to create shader object (type:"<<Type<<")");
+        GLMM_THROW_ERROR("Unable to create shader object (type:" << Type << ")");
     }
 
     // Finalize this object
@@ -35,32 +35,31 @@ GLmm::Shader::Shader(GLenum Type, const std::vector<std::string>& Sources)
 
 GLmm::Shader::Shader(Shader&& Other)
 {
-	mObject = Other.mObject;
-	Other.mObject = 0;
+    mObject = Other.mObject;
+    Other.mObject = 0;
 }
 
-GLmm::Shader&
-GLmm::Shader::operator=(Shader&& Other)
+GLmm::Shader& GLmm::Shader::operator=(Shader&& Other)
 {
-	if (this == &Other)
-		return *this;
+    if (this == &Other)
+        return *this;
 
-	mObject = Other.mObject;
-	Other.mObject = 0;
+    mObject = Other.mObject;
+    Other.mObject = 0;
 
-	return *this;
+    return *this;
 }
 
 GLmm::Shader::~Shader()
 {
-	if (mObject != 0)
-		glDeleteShader(mObject);
+    if (mObject != 0)
+        glDeleteShader(mObject);
 }
 
 void GLmm::Shader::SetSource(const std::string& Source)
 {
-    const GLint	Length=(const int)Source.length();
-    const GLchar* String[1]={Source.data()};
+    const GLint Length = (const int)Source.length();
+    const GLchar* String[1] = { Source.data() };
 
     glShaderSource(mObject, 1, String, &Length);
 }
@@ -76,85 +75,83 @@ void GLmm::Shader::SetSources(const std::vector<std::string>& Sources)
         Strings.push_back(Each.data());
     }
 
-    glShaderSource(mObject, static_cast<GLsizei>(Sources.size()),
-                   Strings.data(), Lengths.data());
+    glShaderSource(mObject, static_cast<GLsizei>(Sources.size()), Strings.data(), Lengths.data());
 }
 
 void GLmm::Shader::Compile()
 {
-	GLint Status = 0;
-	glCompileShader(mObject);
-	glGetShaderiv(mObject, GL_COMPILE_STATUS, &Status);
+    GLint Status = 0;
+    glCompileShader(mObject);
+    glGetShaderiv(mObject, GL_COMPILE_STATUS, &Status);
 
-	// Have there been errors?
-	if (Status == 0)
-	{
-		// Get the length of the compile log
-		GLint InfoLength = 0;
-		glGetShaderiv(mObject, GL_INFO_LOG_LENGTH, &InfoLength);
+    // Have there been errors?
+    if (Status == 0)
+    {
+        // Get the length of the compile log
+        GLint InfoLength = 0;
+        glGetShaderiv(mObject, GL_INFO_LOG_LENGTH, &InfoLength);
 
-		// Get memory and download the log
-		std::vector<char> Buffer(InfoLength+1);
-		glGetShaderInfoLog(mObject, GLsizei(Buffer.size()), 0, Buffer.data());
+        // Get memory and download the log
+        std::vector<char> Buffer(InfoLength + 1);
+        glGetShaderInfoLog(mObject, GLsizei(Buffer.size()), 0, Buffer.data());
 
-		// Throw it!
-		throw CompileError(Buffer.data());
-	}
+        // Throw it!
+        throw CompileError(Buffer.data());
+    }
 }
 
-GLmm::Shader
-GLmm::CreateShaderFromFile(GLenum Type, const boost::filesystem::path& Filename)
+GLmm::Shader GLmm::CreateShaderFromFile(GLenum Type, const boost::filesystem::path& Filename)
 {
-	boost::filesystem::ifstream File(Filename);
+    boost::filesystem::ifstream File(Filename);
 
-	if (!File.good())
-	{
-		auto ErrorString = std::string("Unable to open file:") + Filename.string();
-		throw std::runtime_error(ErrorString);
-	}
+    if (!File.good())
+    {
+        auto ErrorString = std::string("Unable to open file:") + Filename.string();
+        throw std::runtime_error(ErrorString);
+    }
 
-	try {
-		return CreateShaderFromFile(Type, File);
-	}
-	catch (Shader::CompileError& Error)
-	{
+    try
+    {
+        return CreateShaderFromFile(Type, File);
+    }
+    catch (Shader::CompileError& Error)
+    {
 
-		// Tag the filename onto the error message
-		throw std::runtime_error(Filename.string() + " : " + Error.what());
-	}
+        // Tag the filename onto the error message
+        throw std::runtime_error(Filename.string() + " : " + Error.what());
+    }
 }
 
-GLmm::Shader
-GLmm::CreateShaderFromFile(const boost::filesystem::path& Filename)
+GLmm::Shader GLmm::CreateShaderFromFile(const boost::filesystem::path& Filename)
 {
-	return CreateShaderFromFile(GetShaderTypeFromExtension(Filename), Filename);
+    return CreateShaderFromFile(GetShaderTypeFromExtension(Filename), Filename);
 }
 
 GLmm::Shader GLmm::CreateShaderFromFile(GLenum Type, std::istream& File)
 {
-	std::string Contents;
+    std::string Contents;
 
-	// Scan lines
-	std::string Line;
-	while (std::getline(File, Line))
-	{
-		Contents += Line + '\n';
-	}
+    // Scan lines
+    std::string Line;
+    while (std::getline(File, Line))
+    {
+        Contents += Line + '\n';
+    }
 
-	return Shader(Type, Contents);
+    return Shader(Type, Contents);
 }
 
 GLenum GLmm::GetShaderTypeFromExtension(const boost::filesystem::path& Filename)
 {
-	using boost::algorithm::iequals;
-	auto Extension = Filename.extension().string();
+    using boost::algorithm::iequals;
+    auto Extension = Filename.extension().string();
 
-	if (iequals(Extension,".frag") || iequals(Extension,".fs"))
-		return GL_FRAGMENT_SHADER;
-	else if (iequals(Extension,".vert") || iequals(Extension,".vs"))
-		return GL_VERTEX_SHADER;
-	else if (iequals(Extension,".geom"))
-		return GL_GEOMETRY_SHADER;
+    if (iequals(Extension, ".frag") || iequals(Extension, ".fs"))
+        return GL_FRAGMENT_SHADER;
+    else if (iequals(Extension, ".vert") || iequals(Extension, ".vs"))
+        return GL_VERTEX_SHADER;
+    else if (iequals(Extension, ".geom"))
+        return GL_GEOMETRY_SHADER;
 
-	throw std::runtime_error("Unable to deduce shader type from extension: " + Extension);
+    throw std::runtime_error("Unable to deduce shader type from extension: " + Extension);
 }
