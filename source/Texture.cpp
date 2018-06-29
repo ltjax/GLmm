@@ -72,7 +72,6 @@ void Texture3D::LoadFromFileTiled(const Path& Filename, unsigned int x, unsigned
     {
         for (unsigned int i = 0; i < x; ++i)
         {
-            // TODO: do this totally in GL
             Image = SourceImage->get_sub_image(i * wi, j * hi, wi, hi);
 
             glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, j * x + i, wi, hi, 1, GL_RGBA, GL_UNSIGNED_BYTE, Image->get_data());
