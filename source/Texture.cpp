@@ -55,11 +55,10 @@ Texture::Texture()
 
 void Texture3D::LoadFromFileTiled(const Path& Filename, unsigned int x, unsigned int y)
 {
-    replay::shared_pixbuf SourceImage = replay::pixbuf_io::load_from_file(Filename);
-    replay::shared_pixbuf Image;
+    auto SourceImage = replay::pixbuf_io::load_from_file(Filename);
 
-    unsigned int wi = SourceImage->get_width() / x;
-    unsigned int hi = SourceImage->get_height() / y;
+    unsigned int wi = SourceImage.width() / x;
+    unsigned int hi = SourceImage.height() / y;
 
     glBindTexture(GL_TEXTURE_3D, GLObject);
     glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA, wi, hi, x * y, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
@@ -72,9 +71,9 @@ void Texture3D::LoadFromFileTiled(const Path& Filename, unsigned int x, unsigned
     {
         for (unsigned int i = 0; i < x; ++i)
         {
-            Image = SourceImage->get_sub_image(i * wi, j * hi, wi, hi);
+            auto Image = SourceImage.crop(i * wi, j * hi, wi, hi);
 
-            glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, j * x + i, wi, hi, 1, GL_RGBA, GL_UNSIGNED_BYTE, Image->get_data());
+            glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, j * x + i, wi, hi, 1, GL_RGBA, GL_UNSIGNED_BYTE, Image.ptr());
             GLMM_CHECK_ERRORS();
         }
     }
@@ -302,24 +301,24 @@ void Texture2D::SetImage(const replay::pixbuf& Source, Colorspace Space)
 {
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-    auto Format = FormatForChannelCount(Source.get_channels());
+    auto Format = FormatForChannelCount(Source.channel_count());
 
-    SetImage(0, InternalFormatForFormat(Format, Space), Source.get_width(), Source.get_height(), Format,
-             GL_UNSIGNED_BYTE, Source.get_data());
+    SetImage(0, InternalFormatForFormat(Format, Space), Source.width(), Source.height(), Format,
+             GL_UNSIGNED_BYTE, Source.ptr());
 }
 
 void Texture2D::LoadFromFile(const Path& Filename, Colorspace Space)
 {
     // load the texture
-    replay::shared_pixbuf Source = replay::pixbuf_io::load_from_file(Filename);
+    auto Source = replay::pixbuf_io::load_from_file(Filename);
 
-    if (!Source)
+    if (Source.empty())
         GLMM_THROW_ERROR("Unable to load texture: " << Filename.string() << " (unable to load image file)");
 
-    this->SetImage(*Source, Space);
+    this->SetImage(Source, Space);
 }
 
-replay::shared_pixbuf Texture2D::GetImage(GLint Level) const
+replay::pixbuf Texture2D::GetImage(GLint Level) const
 {
     GLint Width = 0;
     GLint Height = 0;
@@ -329,11 +328,11 @@ replay::shared_pixbuf Texture2D::GetImage(GLint Level) const
     glGetTexLevelParameteriv(GL_TEXTURE_2D, Level, GL_TEXTURE_HEIGHT, &Height);
     GLMM_CHECK_ERRORS();
 
-    replay::shared_pixbuf Result = replay::pixbuf::create(Width, Height, replay::pixbuf::rgba);
+    replay::pixbuf Result(Width, Height, replay::pixbuf::color_format::rgba);
 
     glPixelStorei(GL_PACK_ALIGNMENT, 1);
     GLMM_CHECK_ERRORS();
-    glGetTexImage(GL_TEXTURE_2D, Level, GL_RGBA, GL_UNSIGNED_BYTE, Result->get_data());
+    glGetTexImage(GL_TEXTURE_2D, Level, GL_RGBA, GL_UNSIGNED_BYTE, Result.ptr());
     GLMM_CHECK_ERRORS();
 
     return Result;

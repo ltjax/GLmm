@@ -1,14 +1,6 @@
-/*  Cataclysm-Software Disaster Engine
+#pragma once
 
-    $Id: Texture.hpp 920 2011-04-19 23:10:57Z ltjax $
-
-    Copyright 2006-2007 Marius Elvert
-*/
-
-#ifndef GLMM_TEXTURE_HPP
-#define GLMM_TEXTURE_HPP
-
-#include <boost/filesystem/path.hpp>
+#include <filesystem>
 #include <boost/utility.hpp>
 #include <replay/pixbuf.hpp>
 
@@ -23,7 +15,7 @@ enum class Colorspace
     sRGB
 };
 
-typedef boost::filesystem::path Path;
+using Path = std::filesystem::path;
 
 /** generic texture object.
 */
@@ -161,7 +153,7 @@ public:
 
     /** Image download.
     */
-    replay::shared_pixbuf GetImage(GLint Level) const;
+    replay::pixbuf GetImage(GLint Level) const;
 
     /** get the object id as used by OpenGL
     */
@@ -175,4 +167,3 @@ private:
 };
 }
 
-#endif

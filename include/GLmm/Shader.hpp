@@ -1,9 +1,7 @@
-
-#ifndef GLMM_SHADER_HPP
-#define GLMM_SHADER_HPP
+#pragma once
 
 #include "Object.hpp"
-#include <boost/filesystem/path.hpp>
+#include <filesystem>
 #include <boost/optional/optional.hpp>
 #include <boost/utility.hpp>
 #include <iostream>
@@ -53,7 +51,7 @@ private:
 
 /** Get the OpenGL shader type from a filename extension
 */
-GLenum GetShaderTypeFromExtension(const boost::filesystem::path& Filename);
+GLenum GetShaderTypeFromExtension(const std::filesystem::path& Filename);
 
 /** Create a shader from a file stream.
 */
@@ -61,11 +59,10 @@ Shader CreateShaderFromFile(GLenum Type, std::istream& File);
 
 /** Create a shader from a file.
 */
-Shader CreateShaderFromFile(GLenum Type, const boost::filesystem::path& Filename);
+Shader CreateShaderFromFile(GLenum Type, const std::filesystem::path& Filename);
 
 /** Create a shader from a file and try to guess the shader type.
 */
-Shader CreateShaderFromFile(const boost::filesystem::path& Filename);
+Shader CreateShaderFromFile(const std::filesystem::path& Filename);
 }
 
-#endif

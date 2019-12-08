@@ -1,7 +1,6 @@
 
 #include "Shader.hpp"
 #include <boost/algorithm/string/predicate.hpp>
-#include <boost/filesystem/fstream.hpp>
 #include <fstream>
 #include <vector>
 
@@ -100,9 +99,9 @@ void GLmm::Shader::Compile()
     }
 }
 
-GLmm::Shader GLmm::CreateShaderFromFile(GLenum Type, const boost::filesystem::path& Filename)
+GLmm::Shader GLmm::CreateShaderFromFile(GLenum Type, const std::filesystem::path& Filename)
 {
-    boost::filesystem::ifstream File(Filename);
+    std::ifstream File(Filename);
 
     if (!File.good())
     {
@@ -122,7 +121,7 @@ GLmm::Shader GLmm::CreateShaderFromFile(GLenum Type, const boost::filesystem::pa
     }
 }
 
-GLmm::Shader GLmm::CreateShaderFromFile(const boost::filesystem::path& Filename)
+GLmm::Shader GLmm::CreateShaderFromFile(const std::filesystem::path& Filename)
 {
     return CreateShaderFromFile(GetShaderTypeFromExtension(Filename), Filename);
 }
@@ -141,7 +140,7 @@ GLmm::Shader GLmm::CreateShaderFromFile(GLenum Type, std::istream& File)
     return Shader(Type, Contents);
 }
 
-GLenum GLmm::GetShaderTypeFromExtension(const boost::filesystem::path& Filename)
+GLenum GLmm::GetShaderTypeFromExtension(const std::filesystem::path& Filename)
 {
     using boost::algorithm::iequals;
     auto Extension = Filename.extension().string();
