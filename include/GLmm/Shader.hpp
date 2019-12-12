@@ -2,7 +2,6 @@
 
 #include "Object.hpp"
 #include <filesystem>
-#include <boost/optional/optional.hpp>
 #include <boost/utility.hpp>
 #include <iostream>
 #include <stdexcept>

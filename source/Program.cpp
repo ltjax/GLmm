@@ -1,11 +1,11 @@
 /*  GLmm
-
-    Copyright 2006-2012 Marius Elvert
+    Copyright 2006-2019 Marius Elvert
 */
 
 #include "Program.hpp"
 #include <boost/numeric/conversion/cast.hpp>
 #include <vector>
+#include <cassert>
 
 namespace
 {

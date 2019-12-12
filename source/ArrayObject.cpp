@@ -1,6 +1,7 @@
 
 #include "ArrayObject.hpp"
 #include <boost/numeric/conversion/cast.hpp>
+#include <cassert>
 
 GLmm::ArrayObject::ArrayObject()
 : mObject(0)
