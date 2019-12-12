@@ -5,6 +5,8 @@
 #include <boost/utility.hpp>
 #include <iostream>
 #include <stdexcept>
+#include <vector>
+#include <string>
 
 namespace GLmm
 {
