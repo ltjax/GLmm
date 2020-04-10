@@ -1,11 +1,6 @@
 /*
-
-Cataclysm-Software Disaster Engine
-----------------------------------
-
-Copyright:
-Marius Elvert (marius.elvert@cataclysm-software.com) 2006-2011
-
+GLmm
+Copyright: Marius Elvert (marius.elvert@googlemail.com) 2006-2020
 */
 
 #ifndef GLMM_OBJECT_HPP
@@ -30,7 +25,7 @@ void CheckErrorsAt(const char* File, const unsigned int Line);
 #endif
 
 /** Macro to easiely throw errors.
-*/
+ */
 #define GLMM_THROW_ERROR(ARGS)                                                                                         \
     do                                                                                                                 \
     {                                                                                                                  \
@@ -38,6 +33,6 @@ void CheckErrorsAt(const char* File, const unsigned int Line);
         Str << ARGS;                                                                                                   \
         throw std::runtime_error(Str.str());                                                                           \
     } while (false)
-}
+} // namespace GLmm
 
 #endif // _GLMM_OBJECT_HPP_

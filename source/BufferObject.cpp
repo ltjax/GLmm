@@ -1,14 +1,13 @@
-
-
 #include "BufferObject.hpp"
 
-GLmm::BufferObject::BufferObject()
-: mInvalid(false)
+GLmm::BufferObject::BufferObject(bool AcquireHandle)
+: mInvalid(!AcquireHandle)
 {
-    glGenBuffers(1, &mGLObject);
+    if (AcquireHandle)
+        glGenBuffers(1, &mGLObject);
 }
 
-GLmm::BufferObject::BufferObject(BufferObject&& Rhs)
+GLmm::BufferObject::BufferObject(BufferObject&& Rhs) noexcept
 : mGLObject(Rhs.mGLObject)
 , mInvalid(Rhs.mInvalid)
 {
@@ -59,7 +58,7 @@ void GLmm::BufferObject::Unbind(GLenum Target)
     glBindBuffer(Target, 0);
 }
 
-void GLmm::BufferObject::Swap(BufferObject& Rhs)
+void GLmm::BufferObject::Swap(BufferObject& Rhs) noexcept
 {
     std::swap(this->mGLObject, Rhs.mGLObject);
     std::swap(this->mInvalid, Rhs.mInvalid);

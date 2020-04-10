@@ -12,14 +12,17 @@ namespace GLmm
 
 /** An executable for the programmable GL pipeline.
  */
-class BufferObject : public boost::noncopyable
+class BufferObject
 {
 public:
-    BufferObject();
-    BufferObject(BufferObject&& Rhs);
+    BufferObject(bool AcquireHandle = true);
     ~BufferObject();
 
-    BufferObject& operator=(BufferObject Rhs);
+    BufferObject(BufferObject&& Rhs) noexcept;
+    BufferObject& operator=(BufferObject Rhs) noexcept;
+
+    BufferObject(BufferObject const&) = delete;
+    BufferObject& operator=(BufferObject const&) = delete;
 
     /** Transfer the data to the buffer object.
         Implies a bind.
@@ -72,7 +75,7 @@ public:
 
     static void Unbind(GLenum Target);
 
-    void Swap(BufferObject& Rhs);
+    void Swap(BufferObject& Rhs) noexcept;
 
     GLuint GetGLObject() const
     {
@@ -98,7 +101,7 @@ inline BufferIterator MakeBufferIterator(GLubyte* Data, std::size_t /*Size*/)
 }
 #endif
 
-inline BufferObject& BufferObject::operator=(BufferObject Rhs)
+inline BufferObject& BufferObject::operator=(BufferObject Rhs) noexcept
 {
     Swap(Rhs);
     return *this;
